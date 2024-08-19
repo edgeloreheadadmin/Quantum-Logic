@@ -612,3 +612,165 @@ void ExecuteMainLogic()
 {
     MainComputationalLogic();
 }
+
+
+#include "Math/UnrealMathUtility.h"
+#include "Containers/Array.h"
+#include "Misc/OutputDeviceDebug.h"
+
+// Custom LSTM Cell class (as previously implemented)
+class FLSTMCell {
+    // Same implementation as before
+};
+
+// Custom LSTM Network class (as previously implemented)
+class FLSTMNetwork {
+    // Same implementation as before
+};
+
+// Function to simulate a time series forecast
+TArray<float> TimeSeriesForecasting(const TArray<float>& Data)
+{
+    // Initialize LSTM with 50 units, 2 layers for demonstration
+    FLSTMNetwork LSTMNetwork(1, 50, 1, 2);
+
+    // Simulate LSTM prediction
+    TArray<float> ForecastedValues = LSTMNetwork.Forward(Data);
+
+    // For demonstration, we take the last predicted value
+    return ForecastedValues;
+}
+
+// Example usage
+void ExecuteTimeSeriesForecast()
+{
+    TArray<float> SimulatedData;
+    for (int32 i = 0; i < 100; ++i)
+    {
+        SimulatedData.Add(FMath::Sin(i) + FMath::RandRange(-0.5f, 0.5f)); // Simulated sine wave with noise
+    }
+
+    TArray<float> ForecastResult = TimeSeriesForecasting(SimulatedData);
+    if (ForecastResult.Num() > 0)
+    {
+        float PredictedValue = ForecastResult.Last();
+        UE_LOG(LogTemp, Log, TEXT("Predicted Time Series Value: %f"), PredictedValue);
+    }
+}
+
+#include "Sound/SoundWaveProcedural.h"
+#include "AudioDevice.h"
+#include "Sound/SoundWave.h"
+#include "Kismet/GameplayStatics.h"
+
+// Function to generate a sound wave based on frequency and duration
+void GenerateSoundWave(float Frequency, float Duration)
+{
+    USoundWaveProcedural* SoundWave = NewObject<USoundWaveProcedural>();
+    SoundWave->SetSampleRate(44100);
+    SoundWave->NumChannels = 1;
+    SoundWave->Duration = Duration;
+
+    const int32 NumSamples = SoundWave->GetSampleRateForCurrentPlatform() * Duration;
+    TArray<uint8> RawPCMData;
+    RawPCMData.SetNum(NumSamples * sizeof(int16));
+
+    for (int32 i = 0; i < NumSamples; ++i)
+    {
+        float Amplitude = 32767 * FMath::Sin(2.0f * PI * Frequency * i / SoundWave->GetSampleRateForCurrentPlatform());
+        int16 SampleValue = static_cast<int16>(Amplitude);
+        RawPCMData[i * 2] = SampleValue & 0xFF;
+        RawPCMData[i * 2 + 1] = (SampleValue >> 8) & 0xFF;
+    }
+
+    SoundWave->QueueAudio(RawPCMData.GetData(), RawPCMData.Num());
+    UGameplayStatics::PlaySound2D(GEngine->GetWorldFromContextObjectChecked(WorldContextObject), SoundWave);
+}
+
+// Example usage
+void ExecuteSoundWaveGeneration(float Frequency, float Duration)
+{
+    GenerateSoundWave(Frequency, Duration);
+}
+
+#include "Containers/Array.h"
+#include "Misc/OutputDeviceDebug.h"
+
+// Conceptual Quantum Circuit Simulation
+class FQuantumCircuitSimulator {
+public:
+    FQuantumCircuitSimulator(int32 NumQubits) : NumQubits(NumQubits)
+    {
+        QubitStates.Init(0, NumQubits);
+    }
+
+    void ApplyHadamard(int32 Qubit) { QubitStates[Qubit] = 1; }
+    void ApplyCNOT(int32 ControlQubit, int32 TargetQubit)
+    {
+        if (QubitStates[ControlQubit] == 1)
+        {
+            QubitStates[TargetQubit] = !QubitStates[TargetQubit];
+        }
+    }
+
+    TArray<int32> MeasureAll() { return QubitStates; }
+
+private:
+    int32 NumQubits;
+    TArray<int32> QubitStates;
+};
+
+// Example usage
+void ExecuteQuantumSimulation()
+{
+    FQuantumCircuitSimulator Circuit(2);
+    Circuit.ApplyHadamard(0);
+    Circuit.ApplyCNOT(0, 1);
+
+    TArray<int32> MeasurementResults = Circuit.MeasureAll();
+    for (int32 Result : MeasurementResults)
+    {
+        UE_LOG(LogTemp, Log, TEXT("Quantum Measurement Result: %d"), Result);
+    }
+}
+
+void ExecuteIntegratedLogic()
+{
+    // Simulate quantum operations
+    ExecuteQuantumSimulation();
+    FQuantumCircuitSimulator Circuit(2);
+    Circuit.ApplyHadamard(0);
+    Circuit.ApplyCNOT(0, 1);
+    TArray<int32> QuantumResults = Circuit.MeasureAll();
+
+    // Check quantum output and decide on further actions
+    if (QuantumResults.Num() > 0)
+    {
+        // Simulate time series forecasting
+        TArray<float> SimulatedData;
+        for (int32 i = 0; i < 100; ++i)
+        {
+            SimulatedData.Add(FMath::Sin(i) + FMath::RandRange(-0.5f, 0.5f)); // Simulated sine wave with noise
+        }
+
+        TArray<float> ForecastResult = TimeSeriesForecasting(SimulatedData);
+        if (ForecastResult.Num() > 0)
+        {
+            float PredictedValue = ForecastResult.Last();
+            UE_LOG(LogTemp, Log, TEXT("Predicted Time Series Value: %f"), PredictedValue);
+
+            // Generate sound based on quantum output and predicted value
+            float Frequency = QuantumResults[0] * 1000.0f + 440.0f;
+            ExecuteSoundWaveGeneration(Frequency, 1.0f);  // Generate sound for 1 second
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("Time series forecasting failed."));
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Quantum simulation did not produce valid output."));
+    }
+}
+
