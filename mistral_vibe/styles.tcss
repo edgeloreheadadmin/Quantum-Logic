@@ -194,6 +194,56 @@ WelcomeBanner {
     color: #8b949e;
 }
 
+/* ── System messages (commands / artifacts / errors) ──── */
+SystemMessage {
+    layout: horizontal;
+    padding: 0 1;
+    margin-bottom: 1;
+    border-left: thick #3fb950;
+    background: #0d1117;
+}
+
+SystemMessage .sys-icon {
+    color: #3fb950;
+    width: auto;
+    padding-right: 1;
+    margin-top: 0;
+}
+
+SystemMessage Markdown {
+    background: #0d1117;
+    color: #8b949e;
+    margin: 0;
+    padding: 0;
+    width: 1fr;
+    link-color: #58a6ff;
+}
+
+SystemMessage Markdown MarkdownFence {
+    background: #161b22;
+    border: solid #30363d;
+    padding: 0 1;
+}
+
+/* ── Artifacts + Projects scrolls ───────────────────── */
+#art-scroll,
+#proj-scroll {
+    height: 1fr;
+    background: #0d1117;
+    scrollbar-background: #0d1117;
+    scrollbar-color: #30363d;
+    scrollbar-color-hover: #58a6ff;
+    padding: 1 2;
+}
+
+ArtifactsPanel,
+ProjectsPanel {
+    background: #0d1117;
+    color: #e6edf3;
+    padding: 0;
+    height: auto;
+}
+
 /* ── Dashboard panels (NPU / Neural / Evo / Mem / Cog) ─── */
 #npu-scroll,
 #nn-scroll,

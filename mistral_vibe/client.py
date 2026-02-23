@@ -1,8 +1,8 @@
-"""Mistral API client with async streaming support."""
+"""Mistral API client with async streaming support and dynamic system prompts."""
 
 from __future__ import annotations
 
-from typing import AsyncGenerator, TypedDict
+from typing import AsyncGenerator, Optional, TypedDict
 
 try:
     from mistralai import Mistral
@@ -55,12 +55,20 @@ class MistralClient:
         return self._client
 
     async def stream_chat(
-        self, messages: list[Message]
+        self,
+        messages: list[Message],
+        system_prompt: Optional[str] = None,
     ) -> AsyncGenerator[str, None]:
-        """Stream a chat response token by token."""
+        """
+        Stream a chat response token by token.
+
+        system_prompt — if provided, overrides / extends the default system
+        prompt (used to inject active project instructions + file context).
+        """
         client = self._get_client()
 
-        all_messages = [{"role": "system", "content": SYSTEM_PROMPT}] + list(messages)
+        effective_system = system_prompt if system_prompt is not None else SYSTEM_PROMPT
+        all_messages = [{"role": "system", "content": effective_system}] + list(messages)
 
         stream = await client.chat.stream_async(
             model=self.model,
